@@ -7,16 +7,29 @@ Image on docker hub - [custom-ibm-terraform](https://hub.docker.com/r/csphoenix/
 
 # Useful resources 
 - [Provisioning a VM instance on IBM cloud using Terraform](https://ibm-cloud.github.io/tf-ibm-docs/v0.21.0/r/compute_vm_instance.html)
-- [terraform-provider-ibm] (https://github.com/IBM-Cloud/terraform-provider-ibm)
+- [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+
+```
+├── Dockerfile
+├── README.md
+├── k8s_extra
+│   ├── deployment.yaml
+│   └── secret.yaml
+├── run-tf.sh
+├── terraform-files
+│   ├── main.tf
+│   └── variables.tf
+└── tf-variables.env
+```
 
 # Use the image
 ## Run using Docker
 
 ```
-docker pull csphoenix/custom-ibm-terraform:0.11.14-0.21
+$ docker pull csphoenix/custom-ibm-terraform:0.11.14-0.21
 ```
 
-File `tf-variables.env` looks something the below. These variables are supplied to the sample terraform plan `main.tf` inside the image that provisions a VSI with GPU. For details on how these env variables are used by terraform, take a look at [Setting tf vars using environment variables](https://www.terraform.io/docs/configuration-0-11/variables.html#environment-variables)
+File `tf-variables.env` looks something like the below. These variables are supplied to the sample terraform plan `main.tf` (part of the the image) that provisions a VSI with GPU. For details on how these env variables are used by terraform, take a look at [Setting tf vars using environment variables](https://www.terraform.io/docs/configuration-0-11/variables.html#environment-variables)
 
 ```
 TF_VAR_hostname=tf-gpu-1
@@ -36,11 +49,11 @@ TF_VAR_iaas_classic_api_key=<infra_apikey>
     - If you don't have the ibm tools installed locally, you can use the console to obtain vlan ids. Navigate to [vlans](https://cloud.ibm.com/classic/network/vlans) on your account and click on the vlan in the desired region, and use the ID number from the *browser URL*
 
 ```
-docker run -it --rm --env-file=tf-variables.env csphoenix/custom-ibm-terraform:0.11.14-0.21
+$ docker run -it --rm --env-file=tf-variables.env csphoenix/custom-ibm-terraform:0.11.14-0.21
 ```
 The above docker run command opens an interactive bash session. The container has terraform and ibm terraform providers installed. A sample terraform plan is also included in the image.
 
-NOTE: If you run the script `run-tf.sh` as shown below, the terraform plan provided along with the image is executed and you might be billed accordingly. Take a look at the files before provisioning.
+**NOTE:** If you run the script `run-tf.sh` as shown below, the terraform plan provided along with the image is executed and you might be billed accordingly. Take a look at the files before provisioning.
 
 ```
 root@1ad9f9eddbcf:/workdir# ls
@@ -55,7 +68,7 @@ terraform init
 terraform plan
 terraform apply
 ```
-Instead of using the script, you can cd into the `terraform-files` directory and run the terraform commands as needed.
+Instead of using the script, you can `cd` into the `terraform-files` directory and run the terraform commands as needed.
 
 If the terraform apply is successful, it should show something like `Apply complete! Resources: 1 added, 0 changed, 0 destroyed.`
 Make sure to destroy it if it is created for testing purposes
@@ -67,11 +80,11 @@ root@1ad9f9eddbcf:/workdir/terraform-files# terraform destroy
 
 ## Run on a kubernetes/openshift cluster
 ```
-oc new-project terraform
-oc adm policy add-scc-to-user anyuid -z default
+$ oc new-project terraform
+$ oc adm policy add-scc-to-user anyuid -z default
 ```
 ```
-kubectl run custom-ibm-terraform-container -it --rm --restart=Never --image=csphoenix/custom-ibm-terraform:0.11.14-0.21 
+$ kubectl run custom-ibm-terraform-container -it --rm --restart=Never --image=csphoenix/custom-ibm-terraform:0.11.14-0.21 
 If you don't see a command prompt, try pressing enter.
 root@custom-ibm-terraform-container:/workdir# 
 root@custom-ibm-terraform-container:/workdir# ./run-tf.sh 
@@ -91,7 +104,7 @@ pod "custom-ibm-terraform-container" deleted
 ```
 ## Points to be noted
 - The `main.tf` in the container image is only a sample terraform plan that provisions a VSI with GPU. It can be modified to have more options or new terraform files can be copied into the container for testing
-- The variables like the operating system, VSI GPU flavor, datacenter are set to default values and can be overidden. For details, take a look into `variable.tf` file from the image
+- The variables like the operating system, VSI GPU flavor, datacenter are set to default values and can be overidden. For details, take a look into `variable.tf` file
 - The above steps show only one way to supply variable values to terrform plan. Other ways like using `tfvars` file or if running on a kube pod, a  config map can be created and thus the variables can be retrieved as env variables. More details can be found at [Input Variables](https://www.terraform.io/docs/configuration-0-11/variables.html)
 
 
