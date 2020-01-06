@@ -9,19 +9,6 @@ Image on docker hub - [custom-ibm-terraform](https://hub.docker.com/r/csphoenix/
 - [Provisioning a VM instance on IBM cloud using Terraform](https://ibm-cloud.github.io/tf-ibm-docs/v0.21.0/r/compute_vm_instance.html)
 - [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
 
-```
-├── Dockerfile
-├── README.md
-├── k8s_extra
-│   ├── deployment.yaml
-│   └── secret.yaml
-├── run-tf.sh
-├── terraform-files
-│   ├── main.tf
-│   └── variables.tf
-└── tf-variables.env
-```
-
 # Use the image
 ## Run using Docker
 
