@@ -5,8 +5,9 @@ This document briefly outlines few ways to use the docker image created for the 
 
 Image on docker hub - [custom-ibm-terraform](https://hub.docker.com/r/csphoenix/custom-ibm-terraform)
 
-- [Provisioning a VM instance on IBM cloud using Terraform](https://ibm-cloud.github.io/tf-ibm-docs/v0.21.0/r/compute_vm_instance.html)
-- [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+[Provisioning a VM instance on IBM cloud using Terraform](https://ibm-cloud.github.io/tf-ibm-docs/v0.21.0/r/compute_vm_instance.html)
+
+[terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
 
 # Use the image
 ## Run using Docker
