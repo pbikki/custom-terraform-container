@@ -1,0 +1,47 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: custom-ibm-terraform
+  labels:
+    name: ibm-terraform
+    app: ibm-terraform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ibm-terraform
+  template:
+    metadata:
+      name: ibm-terraform
+      labels:
+        name: ibm-terraform
+        app: ibm-terraform
+    spec:
+      containers:
+        - name: ibm-terraform-container
+          image: csphoenix/custom-ibm-terraform:0.11.14-0.21
+          imagePullPolicy: Always
+          stdin: true
+          tty: true 
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: TF_VAR_ibmcloud_api_key
+              valueFrom:
+                secretKeyRef:
+                  name: ibm-terraform-secret
+                  key: apikey
+            - name: TF_VAR_iaas_classic_username
+              valueFrom:
+                secretKeyRef:
+                  name: ibm-terraform-secret
+                  key: sl_username
+            - name: TF_VAR_iaas_classic_api_key
+              valueFrom:
+                secretKeyRef:
+                  name: ibm-terraform-secret
+                  key: sl_apikey
+          
